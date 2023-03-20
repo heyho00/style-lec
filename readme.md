@@ -269,3 +269,122 @@ const Button =
     `}
 `;
 ```
+
+## attrs
+
+주구장창 반복되는 ,. button의 attribute type 같은거 반복을 제거하기 위해 쓴다.
+
+```js
+const Button =
+  styled.button.attrs({
+    type: "button",
+  }) <
+  { active: boolean } >
+  `
+  padding: 20px;
+  background: ${(props) => (props.active ? "teal" : "#FFF")};
+  color: #000;
+  border: 1px solid #888;
+  border-radius: 20px;
+
+  ${(props) =>
+    props.active &&
+    css`
+      background: #f00;
+      color: yellow;
+    `}
+`;
+```
+
+ButtonProps로 빼주기
+
+```js
+import styled, { css } from "styled-components";
+import { useBoolean } from "usehooks-ts";
+
+type ButtonProps = {
+  type?: "button" | "submit" | "reset",
+  active?: boolean,
+};
+
+export default function Switch() {
+  const { value: active, toggle } = useBoolean(false);
+  return (
+    <Button onClick={toggle} active={active}>
+      On/Off
+    </Button>
+  );
+}
+
+const Button =
+  styled.button.attrs <
+  ButtonProps >
+  {
+    type: "button",
+  } <
+  ButtonProps > //모양이 참 ;;
+  `
+  padding: 20px;
+  background: ${(props) => (props.active ? "teal" : "#FFF")};
+  color: #000;
+  border: 1px solid #888;
+  border-radius: 20px;
+
+  ${(props) =>
+    props.active &&
+    css`
+      background: #f00;
+      color: yellow;
+    `}
+`;
+```
+
+Button type이 있을때, 없을때 옵셔널 처리 해줄수도 있다.
+
+```js
+export default function Switch() {
+  const { value: active, toggle } = useBoolean(false);
+  return (
+    <Button type="submit" onClick={toggle} active={active}>
+      On/Off
+    </Button>
+  );
+}
+
+const Button =
+  styled.button.attrs <
+  ButtonProps >
+  ((props) => ({
+    type: props.type ?? "button",
+  })) <
+  ButtonProps >
+  `
+  padding: 20px;
+  background: ${(props) => (props.active ? "teal" : "#FFF")};
+  color: #000;
+  border: 1px solid #888;
+  border-radius: 20px;
+
+  ${(props) =>
+    props.active &&
+    css`
+      background: #f00;
+      color: yellow;
+    `}
+`;
+```
+
+primary일때 active를 따로 잡아줄 수 있다.
+
+```js
+const PrimaryButton = styled(Button)`
+  background: #eee;
+
+  ${(props) =>
+    props.active &&
+    css`
+      background: #f0f;
+      color: yellow;
+    `}
+`;
+```
