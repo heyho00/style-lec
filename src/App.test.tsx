@@ -1,10 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import App from './App';
+import App from "./App";
 
-describe('App ', () => {
-  it('renders without crash', async () => {
+describe("App ", () => {
+  it("renders without crash", async () => {
     render(<App />);
-
   });
 });

@@ -388,3 +388,117 @@ const PrimaryButton = styled(Button)`
     `}
 `;
 ```
+
+## Global CSS
+
+설치
+
+```js
+npm i styled-reset
+```
+
+```js
+import Switch from "./components/Switch";
+import { Reset } from "styled-reset";
+
+export default function App() {
+  return (
+    <>
+      <Reset />
+      <Switch />
+    </>
+  );
+}
+```
+
+설치하고 import해서 쓰기만 하면 default로 먹어있는 스타일이 reset 된다.
+
+## global style을 만들어 보자
+
+참고
+
+/styles/GlobalStyle.ts
+
+**이 모든 것들은 theme을 활용할 때 빛난다.**
+
+## theme
+
+```js
+const defaultTheme = {
+  colors: {
+    background: "#FFF",
+    text: "#000",
+    primary: "#F00",
+    secondary: "#00F",
+  },
+};
+
+export default defaultTheme;
+```
+
+이런 식으로 잡아주고,
+
+타입을 정해 DefaultTheme을 기준으로 프로퍼티가 추가되거나 제거된 걸 알수 있다.
+
+```js
+
+참고 !!
+
+Theme.ts
+
+defaultTheme.ts
+
+darkTheme.ts
+```
+
+이렇게 타이핑해주고 GlobalStyle에 태운다 !
+
+```js
+// GlobalStyle.ts
+
+ body {
+  font-size: 1.6rem;
+  background: ${(props) => props.theme.colors.background};
+  color: ${(props) => props.theme.colors.background};
+ }
+
+```
+
+이렇게 하면 colors 두 곳에 빨간줄이 쳐지는데, 타입 문제이다.
+
+d.ts 파일로 타입 정해줘야함.
+
+```js
+import 'styled-components';
+
+declare module 'styled-components' {
+ export interface DefaultTheme extends Theme {
+  colors: {
+   background: string;
+   text: string;
+   primary: string;
+   secondary: string;
+  }
+ }
+}
+```
+
+type을 정의하고 defaultTheme을 맞추는 게 불편하니,
+
+반대로 defaultTheme에서 타입을 추출하자.
+
+```js
+import defaultTheme from "./defaultTheme";
+
+type Theme = typeof defaultTheme;
+
+export default Theme;
+```
+
+## window.matchMedia is not a function error
+
+다크모드, 토글 버튼까지 구현하고 나면 에러가 난다.
+
+Jest 공식문서에 내용이 있다.
+
+테스트 최상단에 공식문서의 코드를 붙여줘야함. setupTests.ts 참고.
