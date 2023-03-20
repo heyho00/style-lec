@@ -176,3 +176,96 @@ function HelloWorld({ className }: React.HTMLAttributes<HTMLElement>) {
   );
 }
 ```
+
+## props
+
+usehooks-ts 설치
+
+```js
+npm i usehooks-ts
+```
+
+함수로 빼는 스타일
+
+```js
+import styled from "styled-components";
+import { useBoolean } from "usehooks-ts";
+
+type ButtonProps = {
+  active: boolean,
+};
+
+function background(props: ButtonProps) {
+  return props.active ? "teal" : "#FFF";
+}
+
+export default function Switch() {
+  const { value: active, toggle } = useBoolean(false);
+  return (
+    <Button type="button" onClick={toggle} active={active}>
+      On/Off
+    </Button>
+  );
+}
+
+const Button =
+  styled.button <
+  ButtonProps >
+  `
+  padding: 20px;
+  background: ${background};
+  color: #000;
+  border: 1px solid #888;
+  border-radius: 20px; ;
+`;
+```
+
+간단히 하는 법
+
+```js
+import styled from "styled-components";
+import { useBoolean } from "usehooks-ts";
+
+export default function Switch() {
+  const { value: active, toggle } = useBoolean(false);
+  return (
+    <Button type="button" onClick={toggle} active={active}>
+      On/Off
+    </Button>
+  );
+}
+
+const Button =
+  styled.button <
+  { active: boolean } >
+  `
+  padding: 20px;
+  background: ${(props) => (props.active ? "teal" : "#FFF")};
+  color: #000;
+  border: 1px solid #888;
+  border-radius: 20px; ;
+`;
+```
+
+밑으로 ${} 스크립트 부분을 밑으로 빼서 이런 식으로도 가능
+
+```js
+const Button =
+  styled.button <
+  { active: boolean } >
+  `
+  padding: 20px;
+  background: ${(props) => (props.active ? "teal" : "#FFF")};
+  color: #000;
+  border: 1px solid #888;
+  border-radius: 20px;
+
+  ${(props) =>
+    props.active &&
+    css`
+      // 여기 css 안써도 되지만 스타일드 컴포넌트 확장의 도움을 받기 위해서임. 컬러가 키, 밸류 구분이 됨.
+      background: #f00;
+      color: yellow;
+    `}
+`;
+```
